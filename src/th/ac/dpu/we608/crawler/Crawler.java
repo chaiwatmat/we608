@@ -32,7 +32,7 @@ public class Crawler {
         WebCrawler crawler = new WebCrawler(frontier);
 
         int sleepTime = 1;
-        int maxUrl = 2;
+        int maxUrl = 10000;
 
         if (!"".equals(seedURL)) {
             frontier.addToFrontier(seedURL);
@@ -56,15 +56,5 @@ public class Crawler {
             maxUrl--;
         }
 
-    }
-
-    private void testCode() {
-        String sampleURL = "http://www.dpu.ac.th/";
-        Frontier frontier = new Frontier();
-
-        WebCrawler crawler = new WebCrawler();
-        crawler.setFrontier(frontier);
-        crawler.crawl(sampleURL);
-        crawler.crawl("http://www.ku.ac.th/web2012");
     }
 }

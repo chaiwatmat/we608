@@ -14,7 +14,7 @@ public class Frontier {
 
     }
 
-    public Frontier(Connection connection, String frontierTableName) throws SQLException {
+    public Frontier(Connection connection, String frontierTableName) {
         this.conn = connection;
         this.tableName = frontierTableName;
     }
@@ -77,6 +77,7 @@ public class Frontier {
         } catch (SQLException e) {
             System.err.println("ERROR addContentBlock() - " + url);
             e.printStackTrace();
+            this.addContentBlock(url, null, 1);
         }
     }
 
