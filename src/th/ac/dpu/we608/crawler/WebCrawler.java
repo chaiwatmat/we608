@@ -59,6 +59,8 @@ public class WebCrawler {
             // MalformedURLException - if the request URL is not a HTTP or HTTPS URL, or is otherwise malformed
             // UnsupportedMimeTypeException - if the response mime type is not supported and those errors are not ignored
         } catch (IOException e) {
+            // if any error, skipp this url
+            frontier.addContentBlock(url, null, 1);
             e.printStackTrace();
         }
     }
