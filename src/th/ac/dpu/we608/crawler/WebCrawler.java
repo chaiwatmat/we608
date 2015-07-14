@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class WebCrawler {
 
@@ -37,27 +38,30 @@ public class WebCrawler {
 
         try {
             Connection.Response response = conn.execute();
+
             Document document = response.parse();
             int statusCode = response.statusCode();
 
             Element body = document.body();
-            frontier.addContentBlock(url, body.toString(), statusCode);
-            for (Element i : body.getElementsByTag("a")) {
-                String href = i.attr("abs:href");
 
-                if (checkURL(href)) {
-                    if (!frontier.isDuplicate(href)) {
-                        frontier.addToFrontier(href, url);
+            frontier.addContentBlock(url, (body != null) ? body.toString() : "", statusCode);
+            if (body != null) {
+                for (Element i : body.getElementsByTag("a")) {
+                    String href = i.attr("abs:href");
+
+                    if (checkURL(href)) {
+                        if (!frontier.isDuplicate(href)) {
+                            frontier.addToFrontier(href, url);
+                        }
                     }
                 }
             }
         } catch (HttpStatusException e) {
             frontier.addContentBlock(url, null, e.getStatusCode());
-        } catch (SocketTimeoutException | UnknownHostException e) {
-            frontier.addContentBlock(url, null, 1);
-        } catch (MalformedURLException | UnsupportedMimeTypeException e) {
+        } catch (SocketTimeoutException | UnknownHostException | MalformedURLException | UnsupportedMimeTypeException e) {
             // MalformedURLException - if the request URL is not a HTTP or HTTPS URL, or is otherwise malformed
             // UnsupportedMimeTypeException - if the response mime type is not supported and those errors are not ignored
+            frontier.addContentBlock(url, null, 1);
         } catch (IOException e) {
             // if any error, skipp this url
             frontier.addContentBlock(url, null, 1);

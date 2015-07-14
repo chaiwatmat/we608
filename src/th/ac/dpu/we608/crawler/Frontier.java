@@ -32,6 +32,9 @@ public class Frontier {
             if (rs.next()) {
                 foundUrl = rs.getString("url");
             }
+
+            rs.close();
+            st.close();
         } catch (SQLException e) {
             System.err.println("ERROR getNextURL()");
             e.printStackTrace();
@@ -42,7 +45,7 @@ public class Frontier {
     public boolean isDuplicate(String url) {
         String query = "SELECT * FROM " + tableName + " WHERE url = ?";
         PreparedStatement st;
-        ResultSet rs;
+        ResultSet rs = null;
         boolean check = false;
 
         try {
@@ -55,10 +58,13 @@ public class Frontier {
                 check = true;
             }
 
+            rs.close();
+            st.close();
         } catch (SQLException e) {
             System.err.println("ERROR isDuplicate() - " + url);
             e.printStackTrace();
         }
+
 
         return check;
     }
@@ -74,6 +80,8 @@ public class Frontier {
             st.setString(3, url);
 
             st.executeUpdate();
+
+            st.close();
         } catch (SQLException e) {
             System.err.println("ERROR addContentBlock() - " + url);
             e.printStackTrace();
@@ -97,6 +105,8 @@ public class Frontier {
             st.setString(2, inboundLink);
 
             st.executeUpdate();
+
+            st.close();
         } catch (SQLException e) {
             System.err.println("ERROR addToFrontier() - " + url);
             e.printStackTrace();
